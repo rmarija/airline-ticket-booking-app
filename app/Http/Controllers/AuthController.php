@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -82,5 +84,47 @@ class AuthController extends Controller
         'user' => $request->user()
     ]);
 }
+
+
+
+public function redirectToGoogle()
+{
+    return Socialite::driver('google')->stateless()->redirect();
+}
+
+public function handleGoogleCallback()
+{
+    try {
+        $googleUser = Socialite::driver('google')->stateless()->user();
+
+        $user = User::updateOrCreate(
+            ['email' => $googleUser->getEmail()],
+            [
+                'name' => $googleUser->getName(),
+                'google_id' => $googleUser->getId(),
+                'role' => 'user', 
+                'password' => bcrypt(Str::random(24)) 
+            ]
+        );
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        $frontendUrl = env('FRONTEND_URL') . '/auth/callback?token=' . $token;
+        
+        return redirect()->away($frontendUrl);
+
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Greška pri Google prijavi.'], 500);
+    }
+}
+
+
+
+
+
+
+
+
+
 
 }

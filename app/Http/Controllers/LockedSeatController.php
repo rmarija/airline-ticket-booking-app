@@ -74,7 +74,7 @@ class LockedSeatController extends Controller
                 $postojeci->save();
 
                 return response()->json([
-                    'message' => "Sedište $brojSedista je ponovo zaključano na {$until->diffInMinutes($now)} minuta.",
+                    'message' => "Sedište $brojSedista je ponovo zaključano na {$now->diffInMinutes($until)} minuta.",
                     'lock' => $postojeci,
                 ], 200);
             }
@@ -86,7 +86,7 @@ class LockedSeatController extends Controller
             ]);
 
             return response()->json([
-                'message' => "Sedište $brojSedista je uspešno zaključano na {$until->diffInMinutes($now)} minuta.",
+                'message' => "Sedište $brojSedista je uspešno zaključano na {$now->diffInMinutes($until)} minuta.",
                 'lock' => $lock,
             ], 201);
         });

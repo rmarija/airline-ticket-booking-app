@@ -7,60 +7,72 @@ use Illuminate\Http\Request;
 use App\Models\Rezervacija;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Mail\KartaMail;
+use Illuminate\Support\Facades\Mail;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class RezervacijaController extends Controller
 {
-public function store(Request $request)
-{
-    try {
-        $validated = $request->validate([
-            'ime_putnika' => 'required|string',
-            'email' => 'required|email',
-            'broj_sedista' => 'required|array|min:1',
-            'broj_sedista.*' => 'integer|distinct',
-            'let_id' => 'required|exists:lets,id',
-        ]);
+    public function store(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'ime_putnika' => 'required|string',
+                'email' => 'required|email',
+                'broj_sedista' => 'required|array|min:1',
+                'broj_sedista.*' => 'integer|distinct',
+                'let_id' => 'required|exists:lets,id',
+            ]);
 
-        $let = Let::findOrFail($validated['let_id']);
+            $let = Let::findOrFail($validated['let_id']);
 
-        $rezervacije = DB::transaction(function () use ($validated, $let, $request) {
-            $rezs = [];
-            foreach ($validated['broj_sedista'] as $seat) {
-                $zauzeto = Rezervacija::where('let_id', $validated['let_id'])
-                    ->where('broj_sedista', $seat)
-                    ->lockForUpdate()
-                    ->exists();
+            $rezervacije = DB::transaction(function () use ($validated, $let, $request) {
+                $rezs = [];
+                foreach ($validated['broj_sedista'] as $seat) {
+                    $zauzeto = Rezervacija::where('let_id', $validated['let_id'])
+                        ->where('broj_sedista', $seat)
+                        ->lockForUpdate()
+                        ->exists();
 
-                if ($zauzeto) {
-                    throw new \Exception("Sedište $seat je već rezervisano.");
+                    if ($zauzeto) {
+                        throw new \Exception("Sedište $seat je već rezervisano.");
+                    }
+
+                    $rez = Rezervacija::create([
+                        'ime_putnika' => $validated['ime_putnika'],
+                        'email' => $validated['email'],
+                        'broj_sedista' => $seat,
+                        'let_id' => $validated['let_id'],
+                        'user_id' => $request->user()->id,
+                        'broj_karata' => 1,
+                        'ukupna_cena' => $let->cena, 
+                    ]);
+
+                    $rezs[] = $rez;
                 }
+                return $rezs;
+            });
 
-                $rez = Rezervacija::create([
-                    'ime_putnika' => $validated['ime_putnika'],
-                    'email' => $validated['email'],
-                    'broj_sedista' => $seat,
-                    'let_id' => $validated['let_id'],
-                    'user_id' => $request->user()->id,
-                    'broj_karata' => 1,
-                    'ukupna_cena' => $let->cena, 
-                ]);
+            foreach ($rezervacije as $rezervacija) {
+              $pdf = Pdf::loadView('karta', [
+    'rezervacija' => $rezervacija,
+    'let' => $let
+]);
 
-                $rezs[] = $rez;
+                Mail::to($rezervacija->email)->send(new KartaMail($pdf->output()));
             }
-            return $rezs;
-        });
 
-        return response()->json([
-            'message' => 'Rezervacije uspešno kreirane',
-            'rezervacije' => $rezervacije
-        ], 201);
+            return response()->json([
+                'message' => 'Rezervacije uspešno kreirane',
+                'rezervacije' => $rezervacije
+            ], 201);
 
-    } catch (\Exception $e) {
-        return response()->json([
-            'error' => $e->getMessage()
-        ], 400);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage()
+            ], 400);
+        }
     }
-}
 
     public function index(Request $request)
     {
@@ -108,11 +120,9 @@ public function store(Request $request)
 
         $query->orderBy($sortBy, $sortDir);
 
-$rez = $query->paginate($perPage)->appends($request->query());
+        $rez = $query->paginate($perPage)->appends($request->query());
 
-
-
-      return response()->json([
+        return response()->json([
             'data' => $rez->items(),
             'meta' => [
                 'current_page' => $rez->currentPage(),

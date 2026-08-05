@@ -2,7 +2,8 @@ import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
-import { FaUser, FaEnvelope, FaChair, FaPlaneArrival } from "react-icons/fa";
+import { FaUser, FaEnvelope, FaPlaneArrival } from "react-icons/fa";
+import SeatMap from "../components/SeatMap/SeatMap";
 import "./Reservation.css";
 
 const Reservation = () => {
@@ -43,7 +44,6 @@ const Reservation = () => {
   const cenaPovratak = selectedReturn ? (selectedReturn.cena || 0) * brojKarata : 0;
 
   const ukupnaCena = cenaOdlazak + cenaPovratak + doplataOdlazak + doplataPovratak;
-
 
   useEffect(() => {
     const run = async () => {
@@ -127,6 +127,27 @@ const Reservation = () => {
     fetchReturnSeats();
   }, [selectedReturn, token]);
 
+  const handleSeatToggle = (seat, type) => {
+    setPutnici((prev) => {
+      const next = prev.map(p => ({ ...p }));
+      const key = type === "odlazak" ? "sedisteOdlazak" : "sedistePovratak";
+
+      const hasSeatIndex = next.findIndex((p) => p[key] === seat);
+      
+      if (hasSeatIndex !== -1) {
+        next[hasSeatIndex][key] = null;
+      } else {
+        const emptyIndex = next.findIndex((p) => !p[key]);
+        if (emptyIndex !== -1) {
+          next[emptyIndex][key] = seat;
+        } else {
+          alert(`Već ste izabrali maksimalan broj sedišta (${brojKarata}) za ${type}!`);
+        }
+      }
+      return next;
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -148,19 +169,17 @@ const Reservation = () => {
         setError("Morate izabrati sedišta (ili dozvoliti automatski izbor) za sve putnike (ODLAZAK).");
         return;
       }
-if (birajSedišta) {
-  for (const s of seatsOdlazak) {
-    const res = await axios.post(
-      "http://localhost:8000/api/zakljucaj-sediste",
-      { let_id: letId, broj_sedista: s },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    alert(res.data.message || "Sedište je zaključano!");
-  }
-}
-
-
       
+      if (birajSedišta) {
+        for (const s of seatsOdlazak) {
+          await axios.post(
+            "http://localhost:8000/api/zakljucaj-sediste",
+            { let_id: letId, broj_sedista: s },
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+        }
+      }
+
       for (let i = 0; i < brojKarata; i++) {
         await axios.post(
           "http://localhost:8000/api/rezervacije",
@@ -175,7 +194,6 @@ if (birajSedišta) {
       }
 
       if (selectedReturn) {
-    
         let seatsPovratak = [];
         if (birajSedišta) {
           seatsPovratak = putnici
@@ -190,17 +208,15 @@ if (birajSedišta) {
           return;
         }
 
-      if (birajSedišta) {
-  for (const s of seatsPovratak) {
-    const res = await axios.post(
-      "http://localhost:8000/api/zakljucaj-sediste",
-      { let_id: selectedReturn.id, broj_sedista: s },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    alert(res.data.message || "Sedište je zaključano!");
-  }
-}
-
+        if (birajSedišta) {
+          for (const s of seatsPovratak) {
+            await axios.post(
+              "http://localhost:8000/api/zakljucaj-sediste",
+              { let_id: selectedReturn.id, broj_sedista: s },
+              { headers: { Authorization: `Bearer ${token}` } }
+            );
+          }
+        }
 
         for (let i = 0; i < brojKarata; i++) {
           await axios.post(
@@ -239,7 +255,7 @@ if (birajSedišta) {
           {letInfo?.vreme_poletanja?.split(" ")[0]} u {letInfo?.vreme_poletanja?.split(" ")[1]}
         </p>
 
-        {error && <p className="error">{error}</p>}
+        {error && <p className="error" style={{color: 'red', fontWeight: 'bold'}}>{error}</p>}
 
         <form onSubmit={handleSubmit} className="reservation-form">
           <label>Broj karata:</label>
@@ -264,8 +280,7 @@ if (birajSedišta) {
               onChange={(e) => setBirajSedišta(e.target.checked)}
             />
             <label htmlFor="birajSedista">
-              Želim da biram sedišta <small>(premium opcija)</small>
-            </label>
+Želim da biram sedišta <small>(doplata od 5€ po sedištu)</small>            </label>
           </div>
 
           {returnFlights.length > 0 && (
@@ -327,58 +342,47 @@ if (birajSedišta) {
               </div>
 
               {birajSedišta && (
-                <>
-                  <div className="form-group">
-                    <FaChair className="icon" />
-                    <select
-                      value={p.sedisteOdlazak || ""}
-                      onChange={(e) => {
-                        const next = [...putnici];
-                        next[idx].sedisteOdlazak = Number(e.target.value) || null;
-                        setPutnici(next);
-                      }}
-                    >
-                      <option value="">Sedište za odlazak</option>
-                      {Array.from({ length: letInfo?.broj_mesta || 0 }, (_, i) => i + 1).map((seat) => {
-                        const isZauzeto = zauzetaSedistaOdlazak.includes(seat);
-                        const extraPrice = seatPrices[seat] ?? defaultExtra;
-                        return (
-                          <option key={seat} value={isZauzeto ? "" : seat} disabled={isZauzeto}>
-                            {isZauzeto ? `Sedište ${seat} (zauzeto)` : `Sedište ${seat} (+${extraPrice}€)`}
-                          </option>
-                        );
-                      })}
-                    </select>
-                  </div>
-
+                <div style={{ marginTop: "10px", fontSize: "14px", color: "#374151", padding: "10px", backgroundColor: "#f3f4f6", borderRadius: "8px" }}>
+                  <p style={{ margin: "0 0 5px 0" }}>
+                    <strong>Sedište (Odlazak):</strong> {p.sedisteOdlazak ? p.sedisteOdlazak : "Nije izabrano"}
+                  </p>
                   {selectedReturn && (
-                    <div className="form-group">
-                      <FaChair className="icon" />
-                      <select
-                        value={p.sedistePovratak || ""}
-                        onChange={(e) => {
-                          const next = [...putnici];
-                          next[idx].sedistePovratak = Number(e.target.value) || null;
-                          setPutnici(next);
-                        }}
-                      >
-                        <option value="">Sedište za povratak</option>
-                        {Array.from({ length: selectedReturn?.broj_mesta || 0 }, (_, i) => i + 1).map((seat) => {
-                          const isZauzeto = zauzetaSedistaPovratak.includes(seat);
-                          const extraPrice = seatPrices[seat] ?? defaultExtra;
-                          return (
-                            <option key={seat} value={isZauzeto ? "" : seat} disabled={isZauzeto}>
-                              {isZauzeto ? `Sedište ${seat} (zauzeto)` : `Sedište ${seat} (+${extraPrice}€)`}
-                            </option>
-                          );
-                        })}
-                      </select>
-                    </div>
+                    <p style={{ margin: "0" }}>
+                      <strong>Sedište (Povratak):</strong> {p.sedistePovratak ? p.sedistePovratak : "Nije izabrano"}
+                    </p>
                   )}
-                </>
+                </div>
               )}
             </div>
           ))}
+
+          {birajSedišta && (
+            <div style={{ marginTop: "30px", borderTop: "1px solid #e5e7eb", paddingTop: "20px" }}>
+              <h3 style={{ textAlign: "center", color: "#1e40af" }}>Izaberite sedišta za odlazak</h3>
+              <p style={{ textAlign: "center", fontSize: "14px", color: "#6b7280" }}>
+                Kliknite na mapu aviona da dodelite sedišta putnicima.
+              </p>
+              
+              <SeatMap 
+                ukupnoMesta={letInfo?.broj_mesta || 0}
+                zauzetaSedista={zauzetaSedistaOdlazak}
+                odabranaSedista={putnici.map(p => p.sedisteOdlazak).filter(Boolean)}
+                onSeatClick={(seat) => handleSeatToggle(seat, "odlazak")}
+              />
+
+              {selectedReturn && (
+                <>
+                  <h3 style={{ textAlign: "center", color: "#1e40af", marginTop: "40px" }}>Izaberite sedišta za povratak</h3>
+                  <SeatMap 
+                    ukupnoMesta={selectedReturn?.broj_mesta || 0}
+                    zauzetaSedista={zauzetaSedistaPovratak}
+                    odabranaSedista={putnici.map(p => p.sedistePovratak).filter(Boolean)}
+                    onSeatClick={(seat) => handleSeatToggle(seat, "povratak")}
+                  />
+                </>
+              )}
+            </div>
+          )}
 
           <button type="submit" className="reserve-button">Rezerviši ✈️</button>
         </form>

@@ -16,6 +16,7 @@ import Profile from "./pages/Profile";
 import Footer from "./components/Layout/Footer";
 import AdminPanel from "./pages/AdminPanel";
 import ScrollToTop from "./components/Layout/ScrollToTop";
+import GoogleCallback from "./pages/GoogleCallback";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
          <Route path="/o-nama" element={<About />} />
          <Route path="/faq" element={<Faq />} />
          <Route path="/admin" element={<AdminPanel />} />
+         <Route path="/auth/callback" element={<GoogleCallback />} />
 
 
 

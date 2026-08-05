@@ -42,6 +42,13 @@ Route::get('/user-only', function () {
 Route::get('/slobodna-sedista', [LetController::class, 'slobodnaSedista']);
 Route::delete('/locked-seats/cleanup', [LockedSeatController::class, 'cleanupExpired']);
 
+Route::get('/auth/google/redirect', [AuthController::class, 'redirectToGoogle']);
+Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
+
+
+Route::post('/chat', [AiChatController::class, 'chat']);
+
+
 Route::get('/weather/{city}', function ($city) {
     $apiKey = config('services.weather.key');
 

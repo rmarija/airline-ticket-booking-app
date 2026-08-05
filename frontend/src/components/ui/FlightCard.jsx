@@ -1,8 +1,10 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./FlightCard.css";
 
 const FlightCard = ({ flight }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="flight-card">
       <h3>
@@ -20,12 +22,12 @@ const FlightCard = ({ flight }) => {
 
       <div className="price">{flight.cena} €</div>
 
-      <Link to={`/letovi/${flight.id}`}>
-        <button>Pogledaj detalje ✈️</button>
-      </Link>
+      <button onClick={() => navigate(`/letovi/${flight.id}`)}>
+        <span className="btn-text">Pogledaj detalje</span>
+        <span className="plane-icon">✈️</span>
+      </button>
     </div>
   );
 };
 
 export default FlightCard;
-

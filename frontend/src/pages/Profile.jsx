@@ -57,10 +57,9 @@ const Profile = () => {
         items={[{ label: "Početna", to: "/" }, { label: "Profil" }]}
       />
 
-      {/* Header sa korisnikom */}
       <div className="profile-header">
         <div className="user-info">
-          <div className="avatar">{user.name.charAt(0)}</div>
+          <div className="avatar">{user?.name?.charAt(0)}</div>
           <div>
             <p className="user-name">{user.name}</p>
             <p className="user-email">{user.email}</p>

@@ -42,6 +42,10 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+
+
+
+
   const logout = () => {
     setUser(null);
     setToken(null);
@@ -73,8 +77,29 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+
+const loginWithToken = async (newToken) => {
+    try {
+      api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
+
+     const response = await api.get("/me");
+     const userData = response.data.user ? response.data.user : response.data;
+
+      setUser(userData);
+      setToken(newToken);
+
+      localStorage.setItem("user", JSON.stringify(userData));
+      localStorage.setItem("token", newToken);
+
+      return userData;
+    } catch (error) {
+      console.error("Greška pri povlačenju podataka korisnika nakon Google prijave:", error);
+      throw error;
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, logout, register }}>
+    <AuthContext.Provider value={{ user, token, loading, login, logout, register, loginWithToken }}>
       {children}
     </AuthContext.Provider>
   );

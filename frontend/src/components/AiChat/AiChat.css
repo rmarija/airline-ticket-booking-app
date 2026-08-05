@@ -1,0 +1,117 @@
+.ai-chat-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    font-family: 'Inter', sans-serif;
+}
+
+.chat-toggle-btn {
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: background-color 0.3s;
+    float: right;
+}
+
+.chat-toggle-btn:hover {
+    background-color: #004494;
+}
+
+.chat-window {
+    width: 350px;
+    height: 450px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+
+.chat-header {
+    background-color: #0056b3;
+    color: white;
+    padding: 15px;
+    text-align: center;
+}
+
+.chat-header h3 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.chat-body {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: #f8f9fa;
+}
+
+.message-bubble {
+    max-width: 80%;
+    padding: 10px 15px;
+    border-radius: 18px;
+    font-size: 14px;
+    line-height: 1.4;
+    word-wrap: break-word;
+}
+
+.message-bubble.user {
+    background-color: #0056b3;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+}
+
+.message-bubble.ai {
+    background-color: #e9ecef;
+    color: #333;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+}
+
+.typing {
+    font-style: italic;
+    color: #6c757d;
+}
+
+.chat-footer {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #dee2e6;
+    background-color: white;
+}
+
+.chat-footer input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 20px;
+    outline: none;
+    font-size: 14px;
+}
+
+.chat-footer button {
+    background-color: transparent;
+    border: none;
+    color: #0056b3;
+    font-size: 20px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.chat-footer button:disabled {
+    color: #adb5bd;
+    cursor: not-allowed;
+}

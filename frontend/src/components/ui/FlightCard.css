@@ -33,19 +33,46 @@
 }
 
 .flight-card button {
+  position: relative;
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   border-radius: 8px;
   border: none;
-  background: linear-gradient(to right, #38bdf8, #6791eb);
+  background: linear-gradient(to right, #38bdf8, #2563eb);
   color: #fff;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 15px;
   cursor: pointer;
-  transition: transform 0.2s ease, background 0.3s ease;
+  overflow: hidden; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
 }
 
 .flight-card button:hover {
-  transform: scale(1.05);
   background: linear-gradient(to right, #2563eb, #1e40af);
+  box-shadow: 0 6px 15px rgba(37, 99, 235, 0.4);
+}
+
+.btn-text {
+  transition: transform 0.4s ease;
+}
+
+.plane-icon {
+  position: absolute;
+  left: -30px; 
+  font-size: 18px;
+  transition: left 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+
+.flight-card button:hover .btn-text {
+  transform: translateX(-15px); 
+}
+
+.flight-card button:hover .plane-icon {
+  left: calc(100% - 40px); 
+  transform: scale(1.1);
 }
