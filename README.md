@@ -1,3 +1,27 @@
+ Airline Ticket Booking Application
+
+Full-stack web application for searching and booking airline tickets.
+
+ Key Features:
+- User authentication (login & registration)
+- Flight search, filtering, and pagination
+- Seat reservation system with concurrency control
+- REST API with validation and error handling
+- Integration with external APIs (e.g. weather data)
+
+Tech Stack:
+- Laravel (backend)
+- React (frontend)
+- MySQL (database)
+- Postman (API testing)
+
+About:
+This project was developed as part of a university course. I worked on backend logic, API development, and key features such as seat reservation.
+
+
+
+
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
