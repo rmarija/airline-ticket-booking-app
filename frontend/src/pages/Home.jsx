@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import flightService from "../api/flightService";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
-import Card from "../components/ui/Card";
+import Card from "../components/ui/Card"
+import CityAutocomplete from "../components/ui/CityAutocomplete";;
 import Hero from "../components/ui/Hero";
 import "./Home.css";  
 
@@ -40,19 +41,22 @@ const Home = () => {
       <div id="search-form" className="search-wrapper">
         <Card className="search-card">
           <h2 className="search-title">Pretraži letove</h2>
-          <Input
+          
+          <CityAutocomplete
             label="Polazna destinacija"
             placeholder="Unesite polaznu destinaciju"
             value={polazna}
-            onChange={(e) => setPolazna(e.target.value)}
+            onChange={setPolazna}
           />
-          <Input
+          <CityAutocomplete
             label="Odredište"
             placeholder="Unesite odredište"
             value={odrediste}
-            onChange={(e) => setOdrediste(e.target.value)}
+            onChange={setOdrediste}
           />
+
           <Input
+
             label="Datum polaska (opciono)"
             type="date"
             value={datum}

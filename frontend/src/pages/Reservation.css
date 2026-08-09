@@ -64,26 +64,43 @@
   outline: none;
 }
 
-.checkbox {
+.checkbox-row {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
-  background: #f9fafb;
-  padding: 12px 15px;
+  background: #F7F9FC;
+  padding: 14px 16px;
   border-radius: 10px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #E1E7F0;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background 0.2s;
 }
 
-.checkbox:hover {
-  background: #f1f5f9;
+.checkbox-row:hover {
+  background: #EFF3F8;
 }
 
-.checkbox input {
-  transform: scale(1.2);
+.checkbox-row input[type="checkbox"] {
+  margin-top: 3px;
+  width: 18px;
+  height: 18px;
+  accent-color: #3E7CB1;
+  cursor: pointer;
+  flex-shrink: 0;
 }
+
+.checkbox-row label {
+  font-weight: 500;
+  color: #10233F;
+  cursor: pointer;
+  line-height: 1.5;
+}
+
+.checkbox-row label small {
+  color: #5B6B85;
+  font-weight: 400;
+}
+
 
 .passenger-card {
   background: #f9fafb;

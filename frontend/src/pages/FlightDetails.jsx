@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import flightService from "../api/flightService";
 import { AuthContext } from "../context/AuthContext";
+import { FaPlane } from "react-icons/fa";
 import "./FlightDetails.css";
 
 const FlightDetails = () => {
@@ -45,23 +46,49 @@ const FlightDetails = () => {
   };
 
   return (
-    <div className="flight-details-container">
-      <div className="flight-card">
-        <div className="flight-content">
-          <h2>Detalji leta</h2>
-          <p><strong>Broj leta:</strong> {flight.broj_leta}</p>
-          <p><strong>Polazište:</strong> {flight.polaziste}</p>
-          <p><strong>Odredište:</strong> {flight.odrediste}</p>
-          <p><strong>Datum polaska:</strong> {flight.vreme_poletanja.split(" ")[0]}</p>
-          <p><strong>Vreme polaska:</strong> {flight.vreme_poletanja.split(" ")[1]}</p>
-          <p><strong>Vreme sletanja:</strong> {flight.vreme_sletanja.split(" ")[1]}</p>
-          <p className="price">Cena: {flight.cena} EUR</p>
+    <div className="flight-details-page">
+      <div className="boarding-pass">
+        <div className="boarding-pass-header">
+          <span className="airline-tag">✈️ Veloro AvioKarte</span>
+          <span className="flight-number">{flight.broj_leta}</span>
+        </div>
 
-          <button
-            onClick={handleReservationClick}
-            className="reserve-button"
-          >
-            Rezerviši ✈️
+        <div className="boarding-pass-route">
+          <div className="route-city">
+            <span className="city-name">{flight.polaziste}</span>
+            <span className="route-time">{flight.vreme_poletanja.split(" ")[1]}</span>
+          </div>
+          <div className="route-path">
+<FaPlane className="route-plane" />
+          </div>
+          <div className="route-city">
+            <span className="city-name">{flight.odrediste}</span>
+            <span className="route-time">{flight.vreme_sletanja.split(" ")[1]}</span>
+          </div>
+        </div>
+
+        <div className="boarding-pass-meta">
+          <div className="meta-item">
+            <span className="meta-label">Datum</span>
+            <span className="meta-value">{flight.vreme_poletanja.split(" ")[0]}</span>
+          </div>
+          <div className="meta-item">
+            <span className="meta-label">Broj leta</span>
+            <span className="meta-value">{flight.broj_leta}</span>
+          </div>
+        </div>
+
+        <div className="boarding-pass-stub">
+          <div className="stub-notch stub-notch-left"></div>
+          <div className="stub-notch stub-notch-right"></div>
+
+          <div className="stub-price">
+            <span className="meta-label">Cena</span>
+            <span className="price-value">{flight.cena} €</span>
+          </div>
+
+          <button onClick={handleReservationClick} className="reserve-button">
+            Rezerviši <span>✈️</span>
           </button>
         </div>
       </div>
@@ -71,54 +98,3 @@ const FlightDetails = () => {
 
 export default FlightDetails;
 
-
-/*
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import flightService from "../api/flightService";
-
-const FlightDetails = () => {
-  const { id } = useParams();
-  const [flight, setFlight] = useState(null);
-  const [loading, setLoading] = useState(true); 
-
-  useEffect(() => {
-    const fetchFlight = async () => {
-      try {
-        const response = await flightService.getFlight(id);
-        console.log("Flight response:", response.data);
-        setFlight(response.data);
-      } catch (error) {
-        console.error("Greška prilikom dohvatanja leta:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFlight();
-  }, [id]);
-
-  if (loading) {
-    return <p>Učitavanje...</p>;
-  }
-
-  if (!flight) {
-    return <p>Let nije pronađen.</p>;
-  }
-
-  return (
-    <div className="max-w-2xl mx-auto mt-10 p-4 border rounded shadow">
-      <h2 className="text-2xl font-bold mb-4">Detalji leta</h2>
-      <p><strong>Broj leta:</strong> {flight.broj_leta}</p>
-      <p><strong>Polazište:</strong> {flight.polaziste}</p>
-      <p><strong>Odredište:</strong> {flight.odrediste}</p>
-      <p><strong>Datum polaska:</strong> {flight.vreme_poletanja.split(" ")[0]}</p>
-      <p><strong>Vreme polaska:</strong> {flight.vreme_poletanja.split(" ")[1]}</p>
-      <p><strong>Vreme sletanja:</strong> {flight.vreme_sletanja.split(" ")[1]}</p>
-      <p><strong>Cena:</strong> {flight.cena} EUR</p>
-    </div>
-  );
-};
-
-export default FlightDetails;
-/**/

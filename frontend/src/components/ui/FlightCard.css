@@ -1,59 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
+
 .flight-card {
   background: #ffffff;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid #E1E7F0;
+  border-radius: 16px;
+  padding: 22px;
   text-align: center;
+  font-family: 'Inter', sans-serif;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .flight-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 12px 28px rgba(16, 35, 63, 0.1);
 }
 
 .flight-card h3 {
+  font-family: 'Space Grotesk', sans-serif;
   font-size: 20px;
-  font-weight: bold;
-  color: #1e3a8a;
+  font-weight: 600;
+  color: #10233F;
   margin-bottom: 10px;
 }
 
 .flight-card p {
   font-size: 14px;
-  color: #444;
+  color: #5B6B85;
   margin: 6px 0;
 }
 
+.flight-card p strong {
+  color: #10233F;
+  font-weight: 600;
+}
+
 .flight-card .price {
-  font-size: 18px;
-  font-weight: bold;
-  color: #2563eb;
-  margin: 12px 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #F2A65A;
+  margin: 14px 0;
 }
 
 .flight-card button {
   position: relative;
   width: 100%;
-  padding: 12px;
-  border-radius: 8px;
+  padding: 13px;
+  border-radius: 10px;
   border: none;
-  background: linear-gradient(to right, #38bdf8, #2563eb);
+  background: #10233F;
   color: #fff;
-  font-weight: bold;
-  font-size: 15px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
   cursor: pointer;
-  overflow: hidden; 
+  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: background 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+  transition: background 0.25s ease;
 }
 
 .flight-card button:hover {
-  background: linear-gradient(to right, #2563eb, #1e40af);
-  box-shadow: 0 6px 15px rgba(37, 99, 235, 0.4);
+  background: #3E7CB1;
 }
 
 .btn-text {
@@ -62,17 +71,16 @@
 
 .plane-icon {
   position: absolute;
-  left: -30px; 
-  font-size: 18px;
+  left: -30px;
+  font-size: 16px;
   transition: left 0.5s ease-in-out, transform 0.5s ease-in-out;
 }
 
-
 .flight-card button:hover .btn-text {
-  transform: translateX(-15px); 
+  transform: translateX(-15px);
 }
 
 .flight-card button:hover .plane-icon {
-  left: calc(100% - 40px); 
+  left: calc(100% - 40px);
   transform: scale(1.1);
 }

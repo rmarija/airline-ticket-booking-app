@@ -17,6 +17,7 @@ import Footer from "./components/Layout/Footer";
 import AdminPanel from "./pages/AdminPanel";
 import ScrollToTop from "./components/Layout/ScrollToTop";
 import GoogleCallback from "./pages/GoogleCallback";
+import AiChat from "./components/AiChat/AiChat";
 
 function App() {
   return (
@@ -24,6 +25,8 @@ function App() {
       <Router>
         <ScrollToTop />
         <Header />
+
+        
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/rezultati" element={<SearchResults />} />
@@ -38,10 +41,11 @@ function App() {
          <Route path="/faq" element={<Faq />} />
          <Route path="/admin" element={<AdminPanel />} />
          <Route path="/auth/callback" element={<GoogleCallback />} />
-
-
-
         </Routes>
+
+
+              <AiChat />
+
           <Footer />
       </Router>
     </AuthProvider>

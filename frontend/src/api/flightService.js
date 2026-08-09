@@ -1,5 +1,6 @@
 import api from "./axios";
 
+
 //export const getFlights = (params) => api.get("/letovi", { params });
 
 
@@ -19,6 +20,8 @@ export const deleteReservation = (id) => api.delete(`/rezervacije/${id}`);
 export const getAvailableSeats = (flightId) => api.get("/slobodna-sedista", { params: { flightId } });
 export const cleanupLockedSeats = () => api.delete("/locked-seats/cleanup");
 
+export const getCities = () => api.get("/gradovi");
+
 export default {
   getAllFlights,
   getFlight,
@@ -31,5 +34,6 @@ export default {
   updateReservation,
   deleteReservation,
   getAvailableSeats,
-  cleanupLockedSeats
+  cleanupLockedSeats,
+  getCities
 };

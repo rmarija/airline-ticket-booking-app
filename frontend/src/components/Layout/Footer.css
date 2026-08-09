@@ -1,5 +1,5 @@
 .footer {
-  background: linear-gradient(to right, #38bdf8, #6791eb); 
+  background: linear-gradient(to right, #10233F, #3E7CB1);
   color: white;
   font-family: 'Arial', sans-serif;
 }
@@ -48,14 +48,14 @@
 }
 
 .footer-center a {
-  color: white;
+  color: #F2A65A;
   text-decoration: none;
   font-size: 14px;
   transition: color 0.3s ease;
 }
 
-.footer-center a:hover {
-  color: #e5e7eb;
+.footer-right a:hover {
+color: #F2A65A;
 }
 
 .footer-right {
@@ -79,7 +79,7 @@
 }
 
 .footer-bottom {
-  background-color: #395cbd; 
+  background-color: #10233F;
   text-align: center;
   padding: 12px;
   font-size: 14px;

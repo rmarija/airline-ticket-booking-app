@@ -15,16 +15,32 @@ const AiChat = () => {
         chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
-    const sendMessage = async () => {
+    const formatMessage = (text) => {
+        if (!text) return { __html: '' };
+        
+        const htmlText = text.replace(
+            /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, 
+            '<a href="$2" target="_blank" rel="noopener noreferrer" style="color: #0056b3; font-weight: 600; text-decoration: underline;">$1</a>'
+        );
+        
+        return { __html: htmlText };
+    };
+
+   const sendMessage = async () => {
         if (!input.trim()) return;
 
         const userText = input;
-        setMessages((prev) => [...prev, { sender: 'user', text: userText }]);
+        const updatedMessages = [...messages, { sender: 'user', text: userText }];
+        
+        setMessages(updatedMessages);
         setInput('');
         setIsLoading(true);
 
         try {
-            const response = await axios.post('/chat', { message: userText });
+            const response = await axios.post('/chat', { 
+                message: userText,
+                history: messages 
+            });
             
             setMessages((prev) => [...prev, { sender: 'ai', text: response.data.reply }]);
         } catch (error) {
@@ -55,9 +71,11 @@ const AiChat = () => {
                     
                     <div className="chat-body">
                         {messages.map((msg, index) => (
-                            <div key={index} className={`message-bubble ${msg.sender}`}>
-                                {msg.text}
-                            </div>
+                            <div 
+                                key={index} 
+                                className={`message-bubble ${msg.sender}`}
+                                dangerouslySetInnerHTML={formatMessage(msg.text)}
+                            />
                         ))}
                         {isLoading && (
                             <div className="message-bubble ai typing">
@@ -70,7 +88,7 @@ const AiChat = () => {
                     <div className="chat-footer">
                         <input 
                             type="text" 
-                            placeholder="Npr. let za Pariz..." 
+                            placeholder="Npr. najjeftiniji let do.." 
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyPress={handleKeyPress}

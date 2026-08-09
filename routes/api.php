@@ -6,6 +6,8 @@ use App\Http\Controllers\LetController;
 use App\Http\Controllers\RezervacijaController;
 use App\Http\Controllers\LockedSeatController;
 use Illuminate\Support\Facades\Http; 
+use App\Http\Controllers\AiChatController;
+
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login',    [AuthController::class, 'login']);
@@ -47,7 +49,7 @@ Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallbac
 
 
 Route::post('/chat', [AiChatController::class, 'chat']);
-
+Route::get('/gradovi', [LetController::class, 'gradovi']);
 
 Route::get('/weather/{city}', function ($city) {
     $apiKey = config('services.weather.key');

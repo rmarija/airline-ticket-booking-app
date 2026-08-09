@@ -76,6 +76,16 @@ class LetController extends Controller
 }
 
 
+public function gradovi()
+{
+    $sviGradovi = \App\Models\Let::pluck('polaziste')
+        ->merge(\App\Models\Let::pluck('odrediste'))
+        ->unique()
+        ->values();
+
+    return response()->json(['data' => $sviGradovi]);
+}
+
    public function show($id)
 {
     $let = Let::find($id);
