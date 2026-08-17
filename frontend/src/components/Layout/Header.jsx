@@ -4,6 +4,7 @@ import { AuthContext } from "../../context/AuthContext";
 import UserMenu from "../ui/UserMenu";
 import "./Header.css";
 import Weather from "../ui/Weather"
+import { FaPlane } from "react-icons/fa";
 
 const Header = () => {
   const { user } = useContext(AuthContext);
@@ -11,9 +12,9 @@ const Header = () => {
   return (
     <header className="header">
       <div className="header-container">
-        <Link to="/" className="header-logo">
-          ✈️ Veloro AvioKarte
-        </Link>
+             <Link to="/" className="header-logo">
+<FaPlane className="header-logo-icon" />  Veloro
+</Link>
 
         <nav className="header-nav">
           <Link to="/">Početna</Link>

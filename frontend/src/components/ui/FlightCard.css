@@ -65,22 +65,3 @@
   background: #3E7CB1;
 }
 
-.btn-text {
-  transition: transform 0.4s ease;
-}
-
-.plane-icon {
-  position: absolute;
-  left: -30px;
-  font-size: 16px;
-  transition: left 0.5s ease-in-out, transform 0.5s ease-in-out;
-}
-
-.flight-card button:hover .btn-text {
-  transform: translateX(-15px);
-}
-
-.flight-card button:hover .plane-icon {
-  left: calc(100% - 40px);
-  transform: scale(1.1);
-}

@@ -1,50 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
+
 .user-menu-btn {
   display: flex;
   align-items: center;
-  background: linear-gradient(90deg, #2563eb, #1e40af);
+  background: #10233F;
   color: white;
-  padding: 8px 16px; 
-  border-radius: 8px;
-  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
   transition: background 0.2s ease-in-out;
   cursor: pointer;
-    text-decoration: none; 
+  text-decoration: none;
 }
 
-
 .user-menu-btn svg {
-  margin-right: 8px; 
+  margin-right: 8px;
 }
 
 .user-menu-btn:hover {
-  background: linear-gradient(90deg, #1d4ed8, #1e3a8a);
+  background: #3E7CB1;
 }
 
 .user-menu-dropdown {
   position: absolute;
-  top: 100%;       
-  right: 0;         
-  margin-top: 6px;  
+  top: 100%;
+  right: 0;
+  margin-top: 6px;
   width: 180px;
   background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.15);
+  border: 1px solid #E1E7F0;
+  border-radius: 10px;
+  box-shadow: 0 12px 32px rgba(16, 35, 63, 0.08);
   z-index: 50;
 }
+
 .user-menu-item {
   display: flex;
   align-items: center;
   padding: 10px 14px;
-  color: #374151;
+  color: #5B6B85;
+  font-family: 'Inter', sans-serif;
   font-size: 14px;
   text-decoration: none;
   transition: background 0.2s ease-in-out;
 }
 
 .user-menu-item:hover {
-  background: #f3f4f6;
-  color: #1d4ed8;
+  background: #F7F9FC;
+  color: #10233F;
 }
 
 .user-menu-item svg {
@@ -52,41 +57,42 @@
 }
 
 .user-menu-wrapper {
-  position: relative; 
+  position: relative;
   display: inline-block;
 }
+
 .user-auth-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 10px 18px;
-  border-radius: 12px;
-  font-weight: 500;
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
   font-size: 14px;
   cursor: pointer;
   text-decoration: none;
   transition: all 0.2s ease-in-out;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .user-auth-btn.primary {
-  background: linear-gradient(90deg, #2563eb, #1e40af);
+  background: #10233F;
   color: white;
+  box-shadow: 0 4px 12px rgba(16, 35, 63, 0.15);
 }
 
 .user-auth-btn.primary:hover {
-  background: linear-gradient(90deg, #1d4ed8, #1e3a8a);
+  background: #3E7CB1;
 }
 
 .user-auth-btn.secondary {
   background: #ffffff;
-  border: 2px solid #2563eb;
-  color: #2563eb;
+  border: 1.5px solid #10233F;
+  color: #10233F;
 }
 
 .user-auth-btn.secondary:hover {
-  background: #f0f5ff;
-  border-color: #1d4ed8;
-  color: #1d4ed8;
+  background: #F7F9FC;
+  border-color: #3E7CB1;
+  color: #3E7CB1;
 }
-

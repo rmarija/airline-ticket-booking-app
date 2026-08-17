@@ -270,7 +270,8 @@ class AiChatController extends Controller
         $finalResult = $finalResponse->json() ?? [];
         $finalMessage = $finalResult['choices'][0]['message']['content'] ?? 'Evo rezultata pretrage.';
 
-        $finalMessage .= '<br><br><a href="' . $bookingUrl . '" target="_blank" style="background-color:#0056b3;color:white;padding:6px 12px;border-radius:4px;text-decoration:none;font-weight:bold;display:inline-block;">' . $linkText . '</a>';
+        $finalMessage .= '<br><br><a href="' . $bookingUrl . '" target="_blank" style="background-color:#0056b3;color:white;padding:6px 12px;border-radius:4px;text-decoration:none;font-weight:bold;display:inline-block;">'
+         . $linkText . '</a>';
 
         return response()->json([
             'reply' => $finalMessage,

@@ -26,7 +26,6 @@ function App() {
         <ScrollToTop />
         <Header />
 
-        
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/rezultati" element={<SearchResults />} />
@@ -42,8 +41,7 @@ function App() {
          <Route path="/admin" element={<AdminPanel />} />
          <Route path="/auth/callback" element={<GoogleCallback />} />
         </Routes>
-
-
+        
               <AiChat />
 
           <Footer />

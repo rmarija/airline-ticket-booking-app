@@ -14,8 +14,6 @@ class FlightService
             'x-rapidapi-key' => env('RAPIDAPI_KEY'),
         ];
     }
-
-   
     public function resolveLocation($iataCode)
     {
         $cacheKey = 'skyscanner_location_' . strtoupper($iataCode);
@@ -48,8 +46,6 @@ class FlightService
             ];
         });
     }
-
-  
     public function searchFlights($originSkyId, $destinationSkyId, $date)
     {
         $origin = $this->resolveLocation($originSkyId);

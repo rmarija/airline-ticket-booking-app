@@ -17,12 +17,22 @@
 }
 
 .header-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-size: 22px;
   font-weight: bold;
   text-decoration: none;
   color: white;
   letter-spacing: 0.5px;
   transition: transform 0.2s ease;
+}
+
+
+.header-logo-icon {
+  color: #F2A65A;
+  font-size: 22px;
+  transform: rotate(-15deg);
 }
 
 .header-logo:hover {

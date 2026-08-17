@@ -19,11 +19,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me',      [AuthController::class, 'me']);
-
-    Route::post('/letovi', [LetController::class,'store']);
+     Route::post('/letovi', [LetController::class,'store']);
     Route::put('/letovi/{id}', [LetController::class, 'update']);
     Route::delete('/letovi/{id}', [LetController::class, 'destroy']);
-
     Route::get('/rezervacije', [RezervacijaController::class, 'index']);
     Route::get('/rezervacije/{id}', [RezervacijaController::class, 'show']);
     Route::post('/rezervacije', [RezervacijaController::class, 'store']);
@@ -43,11 +41,8 @@ Route::get('/user-only', function () {
 
 Route::get('/slobodna-sedista', [LetController::class, 'slobodnaSedista']);
 Route::delete('/locked-seats/cleanup', [LockedSeatController::class, 'cleanupExpired']);
-
 Route::get('/auth/google/redirect', [AuthController::class, 'redirectToGoogle']);
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
-
-
 Route::post('/chat', [AiChatController::class, 'chat']);
 Route::get('/gradovi', [LetController::class, 'gradovi']);
 
@@ -65,7 +60,5 @@ Route::get('/weather/{city}', function ($city) {
         'lang'  => 'sr'
     ]);
 
-    
-
-    return $response->json();
+        return $response->json();
 });

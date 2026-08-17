@@ -25,7 +25,7 @@ const Reservation = () => {
   const [selectedReturn, setSelectedReturn] = useState(null);
   const [slobodnaSedistaPovratak, setSlobodnaSedistaPovratak] = useState([]);
   const [zauzetaSedistaPovratak, setZauzetaSedistaPovratak] = useState([]);
-
+  const [submitting, setSubmitting] = useState(false); 
   const [brojKarata, setBrojKarata] = useState(1);
   const [birajSedišta, setBirajSedišta] = useState(false);
   const [putnici, setPutnici] = useState([
@@ -151,6 +151,8 @@ const Reservation = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    if (submitting) return;
+    setSubmitting(true); 
 
     if (!user) {
       setError("Morate biti prijavljeni.");
@@ -236,7 +238,10 @@ const Reservation = () => {
     } catch (err) {
       console.error(err);
       setError(err.response?.data?.error || "Greška pri rezervaciji. Proverite sedišta i pokušajte ponovo.");
-    }
+    }finally {
+  setSubmitting(false);
+}
+
   };
 
   if (loading) return <p className="loading">Učitavanje...</p>;
@@ -245,32 +250,39 @@ const Reservation = () => {
   return (
     <div className="reservation-container">
       <div className="reservation-card">
-        <h2>Rezervacija leta {letInfo?.broj_leta}</h2>
+  <h2>Rezervacija leta {letInfo?.broj_leta}</h2>
 
-        <p>
-          <strong>Ruta:</strong> {letInfo?.polaziste} → {letInfo?.odrediste}
-        </p>
-        <p>
-          <strong>Datum poletanja:</strong>{" "}
-          {letInfo?.vreme_poletanja?.split(" ")[0]} u {letInfo?.vreme_poletanja?.split(" ")[1]}
-        </p>
+  <div className="flight-route-summary">
+    <div className="route-cities">
+      <span className="city-name">{letInfo?.polaziste}</span>
+      <span className="route-plane-icon">✈</span>
+      <span className="city-name">{letInfo?.odrediste}</span>
+    </div>
+    <div className="flight-departure-time">
+      <span>📅 {letInfo?.vreme_poletanja?.split(" ")[0]}</span>
+      <span className="dot-divider">•</span>
+      <span> {letInfo?.vreme_poletanja?.split(" ")[1]?.slice(0, 5)}h</span>
+    </div>
+  </div>
 
-        {error && <p className="error" style={{color: 'red', fontWeight: 'bold'}}>{error}</p>}
+  {error && <p className="error" style={{ color: 'red', fontWeight: 'bold' }}>{error}</p>}
 
-        <form onSubmit={handleSubmit} className="reservation-form">
-          <label>Broj karata:</label>
-          <input
-            type="number"
-            value={brojKarata}
-            min={1}
-            max={slobodnaSedistaOdlazak.length}
-            onChange={(e) => setBrojKarata(Number(e.target.value))}
-            required
-          />
+  <form onSubmit={handleSubmit} className="reservation-form">
+    <label>Broj karata:</label>
+    <input
+      type="number"
+      value={brojKarata}
+      min={1}
+      max={slobodnaSedistaOdlazak.length}
+      onChange={(e) => setBrojKarata(Number(e.target.value))}
+      required
+    />
 
-          <p className="price-highlight">
-            Ukupna cena: <span>{ukupnaCena.toFixed(2)} €</span>
-          </p>
+    <div className="price-highlight-card">
+      <span className="price-label">Ukupno za uplatu:</span>
+      <span className="price-value">{ukupnaCena.toFixed(2)} €</span>
+    </div>
+
 
           <div className="checkbox-row">
             <input
@@ -283,78 +295,86 @@ const Reservation = () => {
 Želim da biram sedišta <small>(doplata od 5€ po sedištu)</small>            </label>
           </div>
 
-          {returnFlights.length > 0 && (
-            <div className="return-flight-box">
-              <label>Povratni let:</label>
-              <div className="form-group">
-                <FaPlaneArrival className="icon" />
-                <select
-                  value={selectedReturn?.id || ""}
-                  onChange={(e) => {
-                    const id = Number(e.target.value);
-                    const found = returnFlights.find((f) => f.id === id) || null;
-                    setSelectedReturn(found);
-                  }}
-                >
-                  <option value="">Bez povratnog leta</option>
-                  {returnFlights.map((f) => (
-                    <option key={f.id} value={f.id}>
-                      {f.polaziste} → {f.odrediste} • {f.vreme_poletanja?.split(" ")[0]} {f.vreme_poletanja?.split(" ")[1]} • {f.cena} €
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          )}
+         {returnFlights.length > 0 && (
+  <div className={`return-flight-card ${selectedReturn ? "active" : ""}`}>
+    <div className="return-header">
+      <div className="return-title">
+        <FaPlaneArrival className="return-icon" />
+        <div>
+          <span className="return-heading">Povratni let</span>
+          <small className="return-subheading">Izaberite datum i vreme povratka</small>
+        </div>
+      </div>
+      {selectedReturn && (
+        <span className="return-badge">+{selectedReturn.cena} € / karta</span>
+      )}
+    </div>
 
-          {putnici.map((p, idx) => (
-            <div key={idx} className="putnik-card">
-              <h4>Putnik {idx + 1}</h4>
+    <div className="custom-select-wrapper">
+      <select
+        className="return-select"
+        value={selectedReturn?.id || ""}
+        onChange={(e) => {
+          const id = Number(e.target.value);
+          const found = returnFlights.find((f) => f.id === id) || null;
+          setSelectedReturn(found);
+        }}
+      >
+        <option value="">Bez povratnog leta</option>
+        {returnFlights.map((f) => (
+          <option key={f.id} value={f.id}>
+            {f.polaziste} → {f.odrediste} • {f.vreme_poletanja?.split(" ")[0]} ({f.vreme_poletanja?.split(" ")[1]?.slice(0, 5)}h) — {f.cena} €
+          </option>
+        ))}
+      </select>
+    </div>
+  </div>
+)}
+{putnici.map((p, idx) => (
+  <div key={idx} className="passenger-card">
+    <h4>Putnik {idx + 1}</h4>
 
-              <div className="form-group">
-                <FaUser className="icon" />
-                <input
-                  type="text"
-                  placeholder="Ime putnika"
-                  value={p.ime}
-                  onChange={(e) => {
-                    const next = [...putnici];
-                    next[idx].ime = e.target.value;
-                    setPutnici(next);
-                  }}
-                  required
-                />
-              </div>
+    <div className="form-group-icon">
+      <FaUser className="input-icon" />
+      <input
+        type="text"
+        placeholder="Ime i prezime putnika"
+        value={p.ime}
+        onChange={(e) => {
+          const next = [...putnici];
+          next[idx].ime = e.target.value;
+          setPutnici(next);
+        }}
+        required
+      />
+    </div>
 
-              <div className="form-group">
-                <FaEnvelope className="icon" />
-                <input
-                  type="email"
-                  placeholder="Email"
-                  value={p.email}
-                  onChange={(e) => {
-                    const next = [...putnici];
-                    next[idx].email = e.target.value;
-                    setPutnici(next);
-                  }}
-                  required
-                />
-              </div>
+    <div className="form-group-icon">
+      <FaEnvelope className="input-icon" />
+      <input
+        type="email"
+        placeholder="Email adresa"
+        value={p.email}
+        onChange={(e) => {
+          const next = [...putnici];
+          next[idx].email = e.target.value;
+          setPutnici(next);
+        }}
+        required
+      />
+    </div>
 
-              {birajSedišta && (
-                <div style={{ marginTop: "10px", fontSize: "14px", color: "#374151", padding: "10px", backgroundColor: "#f3f4f6", borderRadius: "8px" }}>
-                  <p style={{ margin: "0 0 5px 0" }}>
-                    <strong>Sedište (Odlazak):</strong> {p.sedisteOdlazak ? p.sedisteOdlazak : "Nije izabrano"}
-                  </p>
-                  {selectedReturn && (
-                    <p style={{ margin: "0" }}>
-                      <strong>Sedište (Povratak):</strong> {p.sedistePovratak ? p.sedistePovratak : "Nije izabrano"}
-                    </p>
-                  )}
-                </div>
-              )}
-            </div>
-          ))}
+    {birajSedišta && (
+      <div className="seat-badge-container">
+        <p><strong>Sedište (Odlazak):</strong> <span className={p.sedisteOdlazak ? "seat-selected" : "seat-empty"}>{p.sedisteOdlazak || "Nije izabrano"}</span></p>
+        {selectedReturn && (
+          <p><strong>Sedište (Povratak):</strong> <span className={p.sedistePovratak ? "seat-selected" : "seat-empty"}>{p.sedistePovratak || "Nije izabrano"}</span></p>
+        )}
+      </div>
+    )}
+  </div>
+))}
+          
 
           {birajSedišta && (
             <div style={{ marginTop: "30px", borderTop: "1px solid #e5e7eb", paddingTop: "20px" }}>
@@ -384,7 +404,9 @@ const Reservation = () => {
             </div>
           )}
 
-          <button type="submit" className="reserve-button">Rezerviši ✈️</button>
+          <button type="submit" className="reserve-button" disabled={submitting}>
+             {submitting ? "Slanje..." : "Rezerviši ✈️"}
+           </button>
         </form>
       </div>
     </div>

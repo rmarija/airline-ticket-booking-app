@@ -2,16 +2,48 @@ import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import FlightCard from "../components/ui/FlightCard";
 import Breadcrumbs from "../components/ui/Breadcrumbs";
+import CityAutocomplete from "../components/ui/CityAutocomplete";
+import flightService from "../api/flightService";
 import "./SearchResults.css";
 
 const SearchResults = () => {
   const location = useLocation();
-  const flights = location.state?.flights || [];
+  const initialFlights = location.state?.flights || [];
+
+  const [flights, setFlights] = useState(initialFlights);
+  const [polazna, setPolazna] = useState("");
+  const [odrediste, setOdrediste] = useState("");
+  const [datum, setDatum] = useState("");
+  const [searching, setSearching] = useState(false);
 
   const [priceFilter, setPriceFilter] = useState([0, 10000]);
   const [sortOrder, setSortOrder] = useState("asc");
   const [page, setPage] = useState(1);
   const resultsPerPage = 5;
+
+  const handleResearch = async () => {
+    setSearching(true);
+    try {
+      const response = await flightService.getAllFlights();
+      const flightsArray = response.data.data;
+
+      const filteredFlights = flightsArray.filter((letObj) => {
+        const letDatum = letObj.vreme_poletanja.split(" ")[0];
+        return (
+          letObj.polaziste.toLowerCase().includes(polazna.toLowerCase()) &&
+          letObj.odrediste.toLowerCase().includes(odrediste.toLowerCase()) &&
+          (datum === "" || letDatum === datum)
+        );
+      });
+
+      setFlights(filteredFlights);
+      setPage(1);
+    } catch (error) {
+      console.error("Greška prilikom pretrage:", error);
+    } finally {
+      setSearching(false);
+    }
+  };
 
   let filteredFlights = flights.filter(
     (f) => f.cena >= priceFilter[0] && f.cena <= priceFilter[1]
@@ -37,6 +69,39 @@ const SearchResults = () => {
       />
 
       <h2>Rezultati pretrage</h2>
+
+      <div className="research-box">
+        <h3>Pretraga</h3>
+        <div className="research-fields">
+          <CityAutocomplete
+            label="Polazna destinacija"
+            placeholder="Unesite polaznu destinaciju"
+            value={polazna}
+            onChange={setPolazna}
+          />
+          <CityAutocomplete
+            label="Odredište"
+            placeholder="Unesite odredište"
+            value={odrediste}
+            onChange={setOdrediste}
+          />
+          <div className="research-date">
+            <label>Datum (opciono)</label>
+            <input
+              type="date"
+              value={datum}
+              onChange={(e) => setDatum(e.target.value)}
+            />
+          </div>
+        </div>
+        <button
+          className="research-button"
+          onClick={handleResearch}
+          disabled={searching}
+        >
+          {searching ? "Pretražujem..." : "Pretraži ponovo"}
+        </button>
+      </div>
 
       <div className="filter-box">
         <h3>Filtriraj po ceni</h3>
@@ -83,34 +148,33 @@ const SearchResults = () => {
         </div>
       )}
 
-   {totalPages > 1 && (
-  <div className="pagination">
-    <button
-      disabled={page === 1}
-      onClick={() => {
-        setPage(page - 1);
-        window.scrollTo({ top: 0, behavior: "smooth" }); 
-      }}
-    >
-      ⬅ Prethodna
-    </button>
+      {totalPages > 1 && (
+        <div className="pagination">
+          <button
+            disabled={page === 1}
+            onClick={() => {
+              setPage(page - 1);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          >
+            ⬅ Prethodna
+          </button>
 
-    <span>
-      Stranica {page} od {totalPages}
-    </span>
+          <span>
+            Stranica {page} od {totalPages}
+          </span>
 
-    <button
-      disabled={page === totalPages}
-      onClick={() => {
-        setPage(page + 1);
-        window.scrollTo({ top: 0, behavior: "smooth" }); 
-      }}
-    >
-      Sledeća ➡
-    </button>
-  </div>
-)}
-
+          <button
+            disabled={page === totalPages}
+            onClick={() => {
+              setPage(page + 1);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          >
+            Sledeća ➡
+          </button>
+        </div>
+      )}
     </div>
   );
 };

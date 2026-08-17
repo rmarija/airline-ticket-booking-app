@@ -47,7 +47,7 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
           <button type="submit" className="login-btn">
-            Uloguj se
+             Prijavi se
           </button>
         </form>
 

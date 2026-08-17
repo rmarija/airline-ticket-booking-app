@@ -7,7 +7,7 @@ const Footer = () => {
     <footer className="footer">
       <div className="footer-container">
         <div className="footer-left">
-          <h2>AvioKarte</h2>
+          <h2>Veloro</h2>
           <p>
             Kupite avionske karte brzo i jednostavno. <br />
             Rezervišite povratne letove i uživajte u putovanju.
@@ -31,8 +31,7 @@ const Footer = () => {
       </div>
 
       <div className="footer-bottom">
-        © 2024 AvioKarte. Sva prava zadržana.
-      </div>
+© {new Date().getFullYear()} Veloro. Sva prava zadržana.      </div>
     </footer>
   );
 };

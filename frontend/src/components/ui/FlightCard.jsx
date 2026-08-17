@@ -16,18 +16,19 @@ const FlightCard = ({ flight }) => {
       </p>
 
       <p>
-        Poletanje: <strong>{flight.vreme_poletanja.split(" ")[1]}</strong> |{" "}
-        Sletanje: <strong>{flight.vreme_sletanja.split(" ")[1]}</strong>
+       Poletanje: <strong>{flight.vreme_poletanja.split(" ")[1]?.slice(0, 5)}</strong> |{" "}
+       Sletanje: <strong>{flight.vreme_sletanja.split(" ")[1]?.slice(0, 5)}</strong>
       </p>
-
+ 
       <div className="price">{flight.cena} €</div>
 
       <button onClick={() => navigate(`/letovi/${flight.id}`)}>
-        <span className="btn-text">Pogledaj detalje</span>
-        <span className="plane-icon">✈️</span>
+      Pogledaj detalje
       </button>
-    </div>
+      </div>
   );
 };
 
 export default FlightCard;
+
+

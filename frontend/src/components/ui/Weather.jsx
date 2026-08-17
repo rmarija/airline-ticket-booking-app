@@ -34,10 +34,11 @@ const Weather = ({ city = "Beograd" }) => {
   };
 
   return (
-    <span className="weather-badge">
-      {getWeatherIcon(weather.weather[0].main)} {Math.round(weather.main.temp)}°C
-    </span>
-  );
+  <span className="weather-badge">
+    {getWeatherIcon(weather.weather[0].main)}
+    <span className="weather-temp">{Math.round(weather.main.temp)}°C</span>
+  </span>
+);
 };
 
 export default Weather;

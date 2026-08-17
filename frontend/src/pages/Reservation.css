@@ -47,6 +47,8 @@
   color: #333;
 }
 
+
+
 .reservation-form input,
 .reservation-form select {
   width: 100%;
@@ -102,21 +104,7 @@
 }
 
 
-.passenger-card {
-  background: #f9fafb;
-  padding: 18px;
-  border-radius: 12px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
-}
-
-.passenger-card h4 {
-  margin-bottom: 12px;
-  font-size: 16px;
-  font-weight: bold;
-  color: #1e3a8a;
-}
-
-.reserve-btn {
+.reserve-button {
   width: 100%;
   padding: 14px;
   border-radius: 10px;
@@ -129,7 +117,7 @@
   transition: transform 0.2s ease, background 0.3s ease;
 }
 
-.reserve-btn:hover {
+.reserve-button:hover {
   transform: scale(1.05);
   background: linear-gradient(to right, #2563eb, #1e40af);
 }
@@ -146,25 +134,233 @@
   color: #555;
 }
 
-.reservation-form input,
-.reservation-form select {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 14px;
-  transition: border-color 0.3s, box-shadow 0.3s;
-}
 
-
-.reservation-form input:focus,
-.reservation-form select:focus {
-  border-color: #3b82f6; 
-  box-shadow: 0 0 5px rgba(59, 130, 246, 0.4);
-  outline: none;
-}
 
 .reservation-form input:hover,
 .reservation-form select:hover {
   border-color: #60a5fa; 
+}
+
+
+.flight-route-summary {
+  background: linear-gradient(135deg, #f0f7ff 0%, #e0edfd 100%);
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin: 15px 0 20px 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.route-cities {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.city-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f2b48;
+  letter-spacing: 0.5px;
+}
+
+.route-plane-icon {
+  font-size: 18px;
+  color: #2563eb;
+  transform: rotate(0deg);
+}
+
+.flight-departure-time {
+  font-size: 14px;
+  color: #4b5563;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.dot-divider {
+  color: #9ca3af;
+}
+
+.price-highlight-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #0f2b48;
+  color: #ffffff;
+  padding: 14px 20px;
+  border-radius: 10px;
+  margin: 8px 0;
+  box-shadow: 0 4px 12px rgba(15, 43, 72, 0.15);
+}
+
+.price-label {
+  font-size: 15px;
+  font-weight: 500;
+  color: #cbd5e1;
+}
+
+.price-value {
+  font-size: 24px;
+  font-weight: 800;
+  color: #38bdf8;
+  letter-spacing: 0.5px;
+}
+
+/* --- Stilizacija sekcije Povratni let --- */
+.return-flight-card {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.return-flight-card.active {
+  background: #f0f7ff;
+  border-color: #93c5fd;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.08);
+}
+
+.return-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.return-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.return-icon {
+  font-size: 18px;
+  color: #2563eb;
+}
+
+.return-heading {
+  display: block;
+  font-weight: 700;
+  font-size: 15px;
+  color: #0f2b48;
+}
+
+.return-subheading {
+  display: block;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.return-badge {
+  background: #e0f2fe;
+  color: #0369a1;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid #bae6fd;
+}
+
+.custom-select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.return-select {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 9px;
+  font-size: 14px;
+  color: #1e293b;
+  background-color: #ffffff;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.return-select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* --- Poravnate ikonice u poljima --- */
+.form-group-icon {
+  position: relative;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.form-group-icon .input-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.form-group-icon input {
+  width: 100%;
+  padding: 11px 12px 11px 36px; /* prostor levo za ikonicu */
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.form-group-icon input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  outline: none;
+}
+
+/* --- Kartica putnika --- */
+.passenger-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.passenger-card h4 {
+  margin: 0 0 12px 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f2b48;
+}
+
+/* --- Prikaz izabranog sedišta --- */
+.seat-badge-container {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #334155;
+  padding: 10px 14px;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  border: 1px dashed #cbd5e1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.seat-selected {
+  font-weight: 700;
+  color: #2563eb;
+}
+
+.seat-empty {
+  color: #94a3b8;
 }

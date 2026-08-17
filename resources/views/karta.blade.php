@@ -32,8 +32,8 @@
         </div>
 
         <div class="footer">
-            <p><strong>Instrukcije za plaćanje i čekiranje:</strong><br> 
-            Uplatu možete izvršiti na račun agencije. Molimo Vas da budete na aerodromu najmanje 2 sata pre planiranog leta radi čekiranja i predaje prtljaga.</p>
+            <p><strong>Napomena:</strong><br> 
+            Ova karta predstavlja potvrdu vaše rezervacije. Molimo sačuvajte je za svoje evidencije.</p>
         </div>
     </div>
 </body>

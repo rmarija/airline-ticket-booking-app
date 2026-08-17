@@ -1,14 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
+
 .admin-container {
   min-height: 80vh;
   padding: 40px 20px;
   position: relative;
   overflow: hidden;
+  font-family: 'Inter', sans-serif;
 }
 
 .admin-card {
   background: white;
+  border: 1px solid #E1E7F0;
   border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 12px 32px rgba(16, 35, 63, 0.08);
   padding: 24px;
   margin-bottom: 32px;
   position: relative;
@@ -17,16 +21,18 @@
 }
 
 .admin-title {
+  font-family: 'Space Grotesk', sans-serif;
   font-size: 2rem;
   font-weight: 700;
-  color: #1e40af;
+  color: #10233F;
   margin-bottom: 24px;
 }
 
 .section-title {
+  font-family: 'Space Grotesk', sans-serif;
   font-size: 1.4rem;
   font-weight: 600;
-  color: #1e3a8a;
+  color: #10233F;
   margin-bottom: 16px;
 }
 
@@ -38,29 +44,32 @@
 
 .admin-form input {
   padding: 10px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
+  border: 1.5px solid #E1E7F0;
+  border-radius: 10px;
   outline: none;
+  font-family: 'Inter', sans-serif;
   transition: all 0.2s ease-in-out;
 }
 
 .admin-form input:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+  border-color: #3E7CB1;
+  box-shadow: 0 0 0 3px rgba(62, 124, 177, 0.2);
 }
 
 .btn-primary {
   grid-column: span 2;
-  background: linear-gradient(90deg, #2563eb, #1e40af);
+  background: #10233F;
   color: white;
   padding: 12px;
-  border-radius: 8px;
+  border: none;
+  border-radius: 10px;
   font-weight: 600;
-  transition: background 0.3s ease-in-out;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
 }
 
 .btn-primary:hover {
-  background: linear-gradient(90deg, #1d4ed8, #1e3a8a);
+  background: #3E7CB1;
 }
 
 .admin-table {
@@ -68,11 +77,11 @@
   border-collapse: collapse;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(16, 35, 63, 0.06);
 }
 
 .admin-table th {
-  background: #2563eb;
+  background: #10233F;
   color: white;
   font-weight: 600;
   padding: 12px;
@@ -81,28 +90,30 @@
 
 .admin-table td {
   padding: 12px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #E1E7F0;
 }
 
 .admin-table tr:nth-child(even) {
-  background: #f9fafb;
+  background: #F7F9FC;
 }
 
 .admin-table tr:hover {
-  background: #f1f5f9;
+  background: #F0F5FA;
 }
 
 .btn-danger {
-  background: linear-gradient(90deg, #dc2626, #991b1b);
+  background: #B91C1C;
   color: white;
+  border: none;
   padding: 6px 12px;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 0.9rem;
-  transition: background 0.3s ease-in-out;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
 }
 
 .btn-danger:hover {
-  background: linear-gradient(90deg, #b91c1c, #7f1d1d);
+  background: #991B1B;
 }
 
 @keyframes fadeIn {

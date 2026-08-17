@@ -1,12 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
 .weather-badge {
-  background: linear-gradient(135deg, #38bdf8, #6791eb);
-  color: white;
-  padding: 5px 12px;
+  background: #10233F;
+  color: #F7F9FC;
+  padding: 6px 14px;
   border-radius: 20px;
+  font-family: 'Inter', sans-serif;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.weather-badge .weather-temp {
+  color: #F2A65A;
+  font-weight: 700;
 }

@@ -53,14 +53,18 @@ class RezervacijaController extends Controller
                 return $rezs;
             });
 
-            foreach ($rezervacije as $rezervacija) {
-              $pdf = Pdf::loadView('karta', [
-    'rezervacija' => $rezervacija,
-    'let' => $let
-]);
+           foreach ($rezervacije as $rezervacija) {
+                   try {
+                  $pdf = Pdf::loadView('karta', [
+            'rezervacija' => $rezervacija,
+            'let' => $let
+        ]);
 
-                Mail::to($rezervacija->email)->send(new KartaMail($pdf->output()));
-            }
+        Mail::to($rezervacija->email)->send(new KartaMail($pdf->output()));
+    } catch (\Exception $e) {
+        Log::error('Greška pri generisanju/slanju PDF karte za rezervaciju ' . $rezervacija->id . ': ' . $e->getMessage());
+    }
+}
 
             return response()->json([
                 'message' => 'Rezervacije uspešno kreirane',

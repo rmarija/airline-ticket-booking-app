@@ -49,21 +49,21 @@ const FlightDetails = () => {
     <div className="flight-details-page">
       <div className="boarding-pass">
         <div className="boarding-pass-header">
-          <span className="airline-tag">✈️ Veloro AvioKarte</span>
-          <span className="flight-number">{flight.broj_leta}</span>
+<span className="airline-tag"><FaPlane /> Veloro</span>          <span className="flight-number">{flight.broj_leta}</span>
         </div>
 
         <div className="boarding-pass-route">
           <div className="route-city">
             <span className="city-name">{flight.polaziste}</span>
-            <span className="route-time">{flight.vreme_poletanja.split(" ")[1]}</span>
+           <span className="route-time">{flight.vreme_poletanja.split(" ")[1]?.slice(0, 5)}</span>
+
           </div>
           <div className="route-path">
 <FaPlane className="route-plane" />
           </div>
           <div className="route-city">
             <span className="city-name">{flight.odrediste}</span>
-            <span className="route-time">{flight.vreme_sletanja.split(" ")[1]}</span>
+            <span className="route-time">{flight.vreme_sletanja.split(" ")[1]?.slice(0, 5)}</span>
           </div>
         </div>
 
