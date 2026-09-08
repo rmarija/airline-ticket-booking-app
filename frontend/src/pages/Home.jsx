@@ -14,25 +14,18 @@ const Home = () => {
   const [datum, setDatum] = useState("");
   const navigate = useNavigate();
 
-  const handleSearch = async () => {
-    try {
-      const response = await flightService.getAllFlights();
-      const flightsArray = response.data.data;
-
-      const filteredFlights = flightsArray.filter((letObj) => {
-        const letDatum = letObj.vreme_poletanja.split(" ")[0];
-        return (
-          letObj.polaziste.toLowerCase().includes(polazna.toLowerCase()) &&
-          letObj.odrediste.toLowerCase().includes(odrediste.toLowerCase()) &&
-          (datum === "" || letDatum === datum)
-        );
-      });
-
-      navigate("/rezultati", { state: { flights: filteredFlights } });
-    } catch (error) {
-      console.error("Greška prilikom pretrage:", error);
-    }
-  };
+const handleSearch = async () => {
+  try {
+    const response = await flightService.getAllFlights({
+      polaziste: polazna,
+      odrediste: odrediste,
+      datum: datum,
+    });
+    navigate("/rezultati", { state: { flights: response.data.data } });
+  } catch (error) {
+    console.error("Greška prilikom pretrage:", error);
+  }
+};
 
   return (
     <>

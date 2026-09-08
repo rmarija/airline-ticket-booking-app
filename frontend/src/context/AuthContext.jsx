@@ -43,10 +43,13 @@ export const AuthProvider = ({ children }) => {
   };
 
 
+  const logout = async () => {
+    try {
+      await api.post("/logout");
+    } catch (error) {
+      console.error("Greška pri odjavi na serveru:", error);
+    }
 
-
-
-  const logout = () => {
     setUser(null);
     setToken(null);
 

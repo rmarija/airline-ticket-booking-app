@@ -17,9 +17,17 @@ class LetController extends Controller
     if ($request->filled('odrediste')) {
         $query->where('odrediste', 'like', '%' . $request->odrediste . '%');
     }
+
+if ($request->filled('datum')) {
+    $query->whereDate('vreme_poletanja', $request->datum);
+}
+
     if ($request->filled('cena_max')) {
         $query->where('cena', '<=', $request->cena_max);
     }
+    if ($request->filled('datum')) {
+    $query->whereDate('vreme_poletanja', $request->datum);
+}
 
     
     $sortBy = $request->get('sort_by', 'created_at');

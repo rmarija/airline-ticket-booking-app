@@ -57,6 +57,7 @@ const AiChat = () => {
         }
     };
 
+    
     return (
         <div className="ai-chat-container">
             <button className="chat-toggle-btn" onClick={() => setIsOpen(!isOpen)}>

@@ -45,7 +45,8 @@ class AiChatController extends Controller
                 6. Ako funkcija ne vrati letove, jasno to reci i predloži drugi datum ili mesec. NIKADA ne izmišljaj letove ili cene.
                 7. Korisnik te može pitati i opšta pitanja o avio-putovanjima. Odgovori iz opšteg znanja, uz napomenu da su to opšte informacije.
                 8. Ne ubacuj sam link ka stranici za rezervaciju — to sistem radi automatski nakon tvog odgovora.
-                9. Budi koncizan, topao i profesionalan. Piši na srpskom jeziku.'
+                9. Budi koncizan, topao i profesionalan. Piši na srpskom jeziku.
+                10. Ako korisnik NE navede tačnu destinaciju (npr. traži "bilo koji let", "gde god", ili samo grad polaska bez odredišta), NE pozivaj nijednu funkciju za pretragu i NE izmišljaj mesec, godinu, cenu niti bilo koji drugi detalj. Umesto toga, ljubazno pitaj korisnika koju destinaciju ima na umu.'
             ]
         ];
 
