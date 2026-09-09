@@ -1,7 +1,5 @@
 import api from "./axios";
 
-
-
 export const getFlights = (params) => api.get("/letovi", { params });
 export const getAllFlights = () => api.get("/letovi");
 export const getFlight = (id) => api.get(`/letovi/${id}`);
@@ -22,6 +20,7 @@ export const cleanupLockedSeats = () => api.delete("/locked-seats/cleanup");
 export const getCities = () => api.get("/gradovi");
 
 export default {
+  getFlights,
   getAllFlights,
   getFlight,
   createFlight,

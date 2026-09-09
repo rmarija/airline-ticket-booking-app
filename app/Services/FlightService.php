@@ -7,7 +7,70 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class FlightService
+
 {
+    protected array $gradoviMapa = [
+        'beograd' => 'Belgrade',
+        'beca' => 'Vienna',
+        'bec' => 'Vienna',
+        'vienna' => 'Vienna',
+        'budimpesta' => 'Budapest',
+        'solun' => 'Thessaloniki',
+        'atina' => 'Athens',
+        'rim' => 'Rome',
+        'milano' => 'Milan',
+        'venecija' => 'Venice',
+        'pariz' => 'Paris',
+        'london' => 'London',
+        'berlin' => 'Berlin',
+        'minhen' => 'Munich',
+        'cirih' => 'Zurich',
+        'zenava' => 'Geneva',
+        'zeneva' => 'Geneva',
+        'amsterdam' => 'Amsterdam',
+        'brisel' => 'Brussels',
+        'prag' => 'Prague',
+        'varsava' => 'Warsaw',
+        'moskva' => 'Moscow',
+        'istanbul' => 'Istanbul',
+        'carigrad' => 'Istanbul',
+        'kopenhagen' => 'Copenhagen',
+        'stokholm' => 'Stockholm',
+        'lisabon' => 'Lisbon',
+        'madrid' => 'Madrid',
+        'barselona' => 'Barcelona',
+        'nica' => 'Nice',
+        'dubai' => 'Dubai',
+        'njujork' => 'New York',
+        'zagreb' => 'Zagreb',
+        'ljubljana' => 'Ljubljana',
+        'skoplje' => 'Skopje',
+        'sarajevo' => 'Sarajevo',
+        'podgorica' => 'Podgorica',
+        'tivat' => 'Tivat',
+        'nis' => 'Nis',
+    ];
+
+    protected function normalizeCity(string $city): string
+    {
+        $key = mb_strtolower(trim($city), 'UTF-8');
+
+        $key = strtr($key, [
+            'č' => 'c', 'ć' => 'c', 'ž' => 'z',
+            'š' => 's', 'đ' => 'd', 'dž' => 'z',
+        ]);
+
+        $kandidati = [$key, rtrim($key, 'auei')];
+
+        foreach ($kandidati as $k) {
+            if (isset($this->gradoviMapa[$k])) {
+                return $this->gradoviMapa[$k];
+            }
+        }
+
+        return $city;
+    }
+
     protected function apiHeaders()
     {
         return [
@@ -16,51 +79,45 @@ class FlightService
         ];
     }
 
-    public function resolveLocation($iataCode)
+        public function resolveLocation($iataCode)
     {
-        $cacheKey = 'skyscanner_location_' . strtoupper($iataCode);
+        $upit = $this->normalizeCity((string) $iataCode);
+        $cacheKey = 'skyscanner_location_' . strtoupper($upit);
 
-        return Cache::remember($cacheKey, now()->addDay(), function () use ($iataCode) {
-            try {
-                $response = Http::withHeaders($this->apiHeaders())
-                             ->timeout(10)
-                             ->connectTimeout(5)
-                             ->withOptions(['force_ip_resolve' => 'v4'])
-                             ->get('https://sky-scrapper.p.rapidapi.com/api/v1/flights/searchAirport', [
-                        'query' => $iataCode,
-                        'locale' => 'en-US',
-                    ]);
-            } catch (\Illuminate\Http\Client\ConnectionException $e) {
-                Log::warning('SKY-SCRAPPER resolveLocation TIMEOUT/CONNECTION ERROR', [
-                    'query' => $iataCode,
-                    'error' => $e->getMessage(),
+        return Cache::remember($cacheKey, now()->addDay(), function () use ($upit) {
+            $response = Http::withHeaders($this->apiHeaders())
+                         ->timeout(10)
+                         ->connectTimeout(5)
+                         ->withOptions(['force_ip_resolve' => 'v4'])
+                         ->get('https://sky-scrapper.p.rapidapi.com/api/v1/flights/searchAirport', [
+                    'query' => $upit,
+                    'locale' => 'en-US',
                 ]);
-                return null;
-            }
 
             if (!$response->successful()) {
+                \Log::warning('searchAirport nije uspeo', [
+                    'grad' => $upit,
+                    'status' => $response->status(),
+                    'body' => $response->body(),
+                ]);
                 return null;
             }
 
             $data = $response->json('data', []);
 
             if (empty($data)) {
-                Log::warning('SKY-SCRAPPER resolveLocation EMPTY RESULT', [
-                    'query' => $iataCode,
-                    'body' => $response->body(),
-                ]);
+                \Log::warning('searchAirport nije nasao grad', ['grad' => $upit]);
                 return null;
             }
 
             $flightParams = $data[0]['navigation']['relevantFlightParams'] ?? [];
 
             return [
-                'skyId' => $flightParams['skyId'] ?? $iataCode,
+                'skyId' => $flightParams['skyId'] ?? $upit,
                 'entityId' => $flightParams['entityId'] ?? null,
             ];
         });
     }
-
     public function searchFlights($originSkyId, $destinationSkyId, $date)
     {
         $origin = $this->resolveLocation($originSkyId);

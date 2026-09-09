@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import flightService from "../api/flightService";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
-import Card from "../components/ui/Card"
-import CityAutocomplete from "../components/ui/CityAutocomplete";;
+import Card from "../components/ui/Card";
+import CityAutocomplete from "../components/ui/CityAutocomplete";
 import Hero from "../components/ui/Hero";
-import "./Home.css";  
+import "./Home.css";
 
 const Home = () => {
   const [polazna, setPolazna] = useState("");
@@ -14,18 +13,13 @@ const Home = () => {
   const [datum, setDatum] = useState("");
   const navigate = useNavigate();
 
-const handleSearch = async () => {
-  try {
-    const response = await flightService.getAllFlights({
-      polaziste: polazna,
-      odrediste: odrediste,
-      datum: datum,
-    });
-    navigate("/rezultati", { state: { flights: response.data.data } });
-  } catch (error) {
-    console.error("Greška prilikom pretrage:", error);
-  }
-};
+  const handleSearch = () => {
+    const params = new URLSearchParams();
+    if (polazna) params.set("polaziste", polazna);
+    if (odrediste) params.set("odrediste", odrediste);
+    if (datum) params.set("datum", datum);
+    navigate(`/rezultati?${params.toString()}`);
+  };
 
   return (
     <>
@@ -34,7 +28,7 @@ const handleSearch = async () => {
       <div id="search-form" className="search-wrapper">
         <Card className="search-card">
           <h2 className="search-title">Pretraži letove</h2>
-          
+
           <CityAutocomplete
             label="Polazna destinacija"
             placeholder="Unesite polaznu destinaciju"
@@ -49,7 +43,6 @@ const handleSearch = async () => {
           />
 
           <Input
-
             label="Datum polaska (opciono)"
             type="date"
             value={datum}

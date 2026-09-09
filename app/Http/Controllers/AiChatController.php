@@ -37,10 +37,12 @@ class AiChatController extends Controller
                 PRAVILA RAZGOVORA:
                 1. Strogo prati kontekst! Ako je korisnik ranije pomenuo grad ili datum, zapamti ga i ne menjaj ga osim ako korisnik izričito ne traži izmenu.
                 2. Korisnik ti daje imena gradova (npr. "Beograd", "Istanbul") — koristi ih tačno tako, bez prevođenja u bilo kakve kodove. Nikad ne pominji IATA kodove korisniku.
+                2A.  Ime grada uvek prosledi funkciji u NOMINATIVU (npr. korisnik kaže "iz Beograda do Beča" -> originCity="Beograd", destinationCity="Beč").
                 3. Imaš DVE funkcije za pretragu — biraj pravu prema tome koliko je korisnik precizan:
                    - Ako korisnik ima TAČAN datum -> pozovi searchFlights.
                    - Ako korisnik NEMA tačan datum nego traži najjeftiniju opciju u širem periodu (npr. "u avgustu") -> pozovi searchCheapestInMonth.
                 4. Kada dobiješ rezultat od searchCheapestInMonth, izdvoji 3-5 najjeftinijih dana i predstavi ih korisniku, pa ga pitaj da li želi konkretne letove za neki od tih dana.
+               5A. Ako je broj_presedanja veći od 0, OBAVEZNO napiši da let nije direktan i navedi ukupno trajanje. Nikada ne predstavljaj let kao direktan ako broj_presedanja nije 0.
                 5. Kada dobiješ rezultate od searchFlights, ispiši ih pregledno — cena, kompanija/broj leta, vreme polaska, vreme sletanja (samo dostupna polja, ne izmišljaj vrednosti).
                 6. Ako funkcija ne vrati letove, jasno to reci i predloži drugi datum ili mesec. NIKADA ne izmišljaj letove ili cene.
                 7. Korisnik te može pitati i opšta pitanja o avio-putovanjima. Odgovori iz opšteg znanja, uz napomenu da su to opšte informacije.
@@ -174,15 +176,24 @@ class AiChatController extends Controller
         $simplifiedFlights = [];
         $hasResults = isset($flightData['data']['itineraries']) && count($flightData['data']['itineraries']) > 0;
 
-        if ($hasResults) {
+         if ($hasResults) {
             $itineraries = array_slice($flightData['data']['itineraries'], 0, 3);
             foreach ($itineraries as $itinerary) {
                 $leg = $itinerary['legs'][0] ?? [];
+
+                $presedanja = $leg['stopCount'] ?? 0;
+                $trajanjeMin = $leg['durationInMinutes'] ?? null;
+
                 $simplifiedFlights[] = [
                     'cena' => $itinerary['price']['formatted'] ?? 'N/A',
                     'kompanija' => $leg['carriers']['marketing'][0]['name'] ?? 'N/A',
                     'vreme_polaska' => $leg['departure'] ?? 'N/A',
                     'vreme_sletanja' => $leg['arrival'] ?? 'N/A',
+                    'broj_presedanja' => $presedanja,
+                    'tip_leta' => $presedanja > 0 ? 'sa presedanjem' : 'direktan',
+                    'trajanje' => $trajanjeMin
+                        ? intdiv($trajanjeMin, 60) . 'h ' . ($trajanjeMin % 60) . 'min'
+                        : 'N/A',
                 ];
             }
         }

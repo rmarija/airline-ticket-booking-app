@@ -1,19 +1,23 @@
-import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import FlightCard from "../components/ui/FlightCard";
 import Breadcrumbs from "../components/ui/Breadcrumbs";
 import CityAutocomplete from "../components/ui/CityAutocomplete";
-import flightService from "../api/flightService";
+import { getFlights } from "../api/flightService";
 import "./SearchResults.css";
 
 const SearchResults = () => {
-  const location = useLocation();
-  const initialFlights = location.state?.flights || [];
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [flights, setFlights] = useState(initialFlights);
-  const [polazna, setPolazna] = useState("");
-  const [odrediste, setOdrediste] = useState("");
-  const [datum, setDatum] = useState("");
+  const qPolazna = searchParams.get("polaziste") || "";
+  const qOdrediste = searchParams.get("odrediste") || "";
+  const qDatum = searchParams.get("datum") || "";
+
+  const [polazna, setPolazna] = useState(qPolazna);
+  const [odrediste, setOdrediste] = useState(qOdrediste);
+  const [datum, setDatum] = useState(qDatum);
+
+  const [flights, setFlights] = useState([]);
   const [searching, setSearching] = useState(false);
 
   const [priceFilter, setPriceFilter] = useState([0, 10000]);
@@ -21,35 +25,50 @@ const SearchResults = () => {
   const [page, setPage] = useState(1);
   const resultsPerPage = 5;
 
-  const handleResearch = async () => {
+  useEffect(() => {
+    setPolazna(qPolazna);
+    setOdrediste(qOdrediste);
+    setDatum(qDatum);
+
     setSearching(true);
-    try {
-      const response = await flightService.getAllFlights();
-      const flightsArray = response.data.data;
 
-      const filteredFlights = flightsArray.filter((letObj) => {
-        const letDatum = letObj.vreme_poletanja.split(" ")[0];
-        return (
-          letObj.polaziste.toLowerCase().includes(polazna.toLowerCase()) &&
-          letObj.odrediste.toLowerCase().includes(odrediste.toLowerCase()) &&
-          (datum === "" || letDatum === datum)
-        );
-      });
+    const params = { per_page: 100 };
+    if (qPolazna) params.polaziste = qPolazna;
+    if (qOdrediste) params.odrediste = qOdrediste;
 
-      setFlights(filteredFlights);
-      setPage(1);
-    } catch (error) {
-      console.error("Greška prilikom pretrage:", error);
-    } finally {
-      setSearching(false);
-    }
+    getFlights(params)
+      .then((res) => {
+        let lista = Array.isArray(res.data?.data) ? res.data.data : [];
+
+        if (qDatum) {
+          lista = lista.filter(
+            (l) => String(l.vreme_poletanja).slice(0, 10) === qDatum
+          );
+        }
+
+        setFlights(lista);
+        setPage(1);
+      })
+      .catch((err) => {
+        console.error("Greška prilikom pretrage:", err);
+        setFlights([]);
+      })
+      .finally(() => setSearching(false));
+  }, [qPolazna, qOdrediste, qDatum]);
+
+  const handleResearch = () => {
+    const params = {};
+    if (polazna) params.polaziste = polazna;
+    if (odrediste) params.odrediste = odrediste;
+    if (datum) params.datum = datum;
+    setSearchParams(params);
   };
 
   let filteredFlights = flights.filter(
-    (f) => f.cena >= priceFilter[0] && f.cena <= priceFilter[1]
+    (f) => Number(f.cena) >= priceFilter[0] && Number(f.cena) <= priceFilter[1]
   );
 
-  filteredFlights = filteredFlights.sort((a, b) =>
+  filteredFlights = [...filteredFlights].sort((a, b) =>
     sortOrder === "asc" ? a.cena - b.cena : b.cena - a.cena
   );
 
@@ -62,10 +81,7 @@ const SearchResults = () => {
   return (
     <div className="search-results">
       <Breadcrumbs
-        items={[
-          { label: "Početna", to: "/" },
-          { label: "Rezultati pretrage" },
-        ]}
+        items={[{ label: "Početna", to: "/" }, { label: "Rezultati pretrage" }]}
       />
 
       <h2>Rezultati pretrage</h2>
@@ -129,16 +145,15 @@ const SearchResults = () => {
         </div>
 
         <h3>Sortiraj po ceni</h3>
-        <select
-          value={sortOrder}
-          onChange={(e) => setSortOrder(e.target.value)}
-        >
+        <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
           <option value="asc">Cena (najniža prvo)</option>
           <option value="desc">Cena (najviša prvo)</option>
         </select>
       </div>
 
-      {displayedFlights.length === 0 ? (
+      {searching ? (
+        <p className="no-results">Učitavanje...</p>
+      ) : displayedFlights.length === 0 ? (
         <p className="no-results">Nema letova za zadate kriterijume</p>
       ) : (
         <div className="results-list">
@@ -159,11 +174,9 @@ const SearchResults = () => {
           >
             ⬅ Prethodna
           </button>
-
           <span>
             Stranica {page} od {totalPages}
           </span>
-
           <button
             disabled={page === totalPages}
             onClick={() => {
